@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+</head>
+<body>
+
+<table>
+    <tr>
+        <th></th>
+        <th>A</th>
+        <th>B</th>
+        <th>C</th>
+        <th>D</th>
+    </tr>
+    <tr>
+        <th>1</th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{a1.value}"/>
+                <input type="hidden" th:field="*{a1.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{b1.value}"/>
+                <input type="hidden" th:field="*{b1.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{c1.value}"/>
+                <input type="hidden" th:field="*{c1.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{d1.value}"/>
+                <input type="hidden" th:field="*{d1.id}">
+            </form>
+        </th>
+    </tr>
+
+    <tr>
+        <th>2</th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{a2.value}"/>
+                <input type="hidden" th:field="*{a2.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{b2.value}"/>
+                <input type="hidden" th:field="*{b2.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{c2.value}"/>
+                <input type="hidden" th:field="*{c2.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{d2.value}"/>
+                <input type="hidden" th:field="*{d2.id}">
+            </form>
+    </tr>
+
+    <tr>
+        <th>3</th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{a3.value}"/>
+                <input type="hidden" th:field="*{a3.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{b3.value}"/>
+                <input type="hidden" th:field="*{b3.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{c3.value}"/>
+                <input type="hidden" th:field="*{c3.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{d3.value}"/>
+                <input type="hidden" th:field="*{d3.id}">
+            </form>
+    </tr>
+    <tr>
+        <th>4</th>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{a4.value}"/>
+                <input type="hidden" th:field="*{a4.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{b4.value}"/>
+                <input type="hidden" th:field="*{b4.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{c4.value}"/>
+                <input type="hidden" th:field="*{c4.id}">
+            </form>
+        </th>
+        <th>
+            <form th:method="PATCH" th:action="@{/table}" th:object="${table}">
+                <input type="text" th:field="*{d4.value}"/>
+                <input type="hidden" th:field="*{d4.id}">
+            </form>
+        </th>
+    </tr>
+</table>
+
+</body>
+</html>
