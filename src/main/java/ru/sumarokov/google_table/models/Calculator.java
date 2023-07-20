@@ -96,7 +96,9 @@ public class Calculator {
             token += expression.charAt(i);
             if (i != (expression.length() - 1)
                     && ((Character.isDigit(expression.charAt(i)) || expression.charAt(i) == '.'))
-                    && ((Character.isDigit(expression.charAt(i + 1))) || expression.charAt(i + 1) == '.')) ;
+                    && ((Character.isDigit(expression.charAt(i + 1))) || expression.charAt(i + 1) == '.')) continue;
+            else if ((expression.charAt(i) == '-' && Character.isDigit(expression.charAt(i + 1)))
+                     && (i == 0 || !Character.isDigit(expression.charAt(i - 1))) ) continue;
             else {
                 listExpression.add(token);
                 token = "";
