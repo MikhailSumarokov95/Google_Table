@@ -25,11 +25,12 @@ public class Validator {
                     && valueChar[i] != ')' && valueChar[i] != '(' && valueChar[i] != '=')
                 throw new Exception("Incorrect value. Invalid operator symbol");
 
-            if (!Character.isLetterOrDigit(valueChar[i])
+            if ((!Character.isLetterOrDigit(valueChar[i]) && !(valueChar[i] == '-'))
                     && (i == valueChar.length - 1
                     || (!Character.isLetterOrDigit(valueChar[i + 1])
                     && valueChar[i] != ')' && valueChar[i] != '('
-                    && valueChar[i + 1] != ')' && valueChar[i + 1] != '(')))
+                    && valueChar[i + 1] != ')' && valueChar[i + 1] != '('
+                    && valueChar[i + 1] != '-')))
                 throw new Exception("Incorrect value. The sign must be followed by a number or a reference");
 
             if (valueChar[i] == '/' && valueChar[i + 1] == '0')
@@ -37,6 +38,19 @@ public class Validator {
 
             if (valueChar[i] == '(') bracketNumberDifference++;
             else if (valueChar[i] == ')') bracketNumberDifference--;
+
+            if (valueChar[i] == '-') {
+                if (i == 0) {
+                    if (!Character.isLetterOrDigit(valueChar[i + 1]))
+                        throw new Exception("Incorrect value. Incorrect location of the '-' sign");
+                } else {
+                    if (i == valueChar.length - 1)
+                        throw new Exception("Incorrect value. Sing '-' at the end of the expression");
+                    if (!(Character.isLetterOrDigit(valueChar[i + 1]) || Character.isDigit(valueChar[i - 1])))
+                        if (!((valueChar[i - 1]) == ')' && (valueChar[i + 1]) == '('))
+                            throw new Exception("Incorrect value. Incorrect location of the '-' sign");
+                }
+            }
         }
 
         if (bracketNumberDifference != 0)
