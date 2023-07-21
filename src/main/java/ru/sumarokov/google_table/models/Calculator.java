@@ -9,7 +9,7 @@ import java.util.Stack;
 @Component
 public class Calculator {
 
-    public String calculate(String expression) {
+    public String calculate(String expression) throws Exception {
         Stack<Double> numbers = new Stack<>();
         Stack<String> operations = new Stack<>();
         List<String> tokens = parseToListToken(expression);
@@ -41,7 +41,7 @@ public class Calculator {
         return numbers.pop().toString();
     }
 
-    private void performAnOperation(Stack<Double> numbers, Stack<String> operations) {
+    private void performAnOperation(Stack<Double> numbers, Stack<String> operations) throws Exception {
         Double secondNumber = numbers.pop();
         Double firstNumber = numbers.pop();
         Double result = 0.0;
@@ -56,6 +56,8 @@ public class Calculator {
                 result = firstNumber * secondNumber;
                 break;
             case "/":
+                if (secondNumber.equals(0d))
+                    throw new Exception("Incorrect value. During the calculation, a division by zero has occurred");
                 result = firstNumber / secondNumber;
                 break;
         }
