@@ -2,6 +2,9 @@ package ru.sumarokov.google_table.models;
 
 import org.springframework.stereotype.Component;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Component
 public class Validator {
 
@@ -11,50 +14,77 @@ public class Validator {
         else validateNumber(value);
     }
 
-    private void validateFormula(String value) throws Exception {
-        char[] valueChar = value.toCharArray();
+    private void validateFormula(String expression) throws Exception {
+        char[] expressionChar = expression.toCharArray();
 
-        int bracketNumberDifference = 0;
-        for (int i = 0; i < valueChar.length; i++) {
+        validateEquals(expressionChar);
+        validateIncorrectOperator(expression);
+        validateOperatorIsEndChar(expressionChar);
+        validateDefectiveBracket(expressionChar);
+        validateBracketIsEmpty(expression);
+        validateCorrectSequenceOperatorsAndNumbers(expression);
+        validateDivideByZero(expression);
+        validateSubtraction(expression);
+    }
 
-            if (i != 0 && valueChar[i] == '=')
+    private void validateEquals(char[] expression) throws Exception {
+        for (int i = 1; i < expression.length; i++)
+            if (expression[i] == '=')
                 throw new Exception("Incorrect value. 2 equals");
+    }
 
-            if (!Character.isLetterOrDigit(valueChar[i]) && valueChar[i] != '/' && valueChar[i] != '*'
-                    && valueChar[i] != '+' && valueChar[i] != '-' && valueChar[i] != '.'
-                    && valueChar[i] != ')' && valueChar[i] != '(' && valueChar[i] != '=')
-                throw new Exception("Incorrect value. Invalid operator symbol");
+    private void validateIncorrectOperator(String expression) throws Exception {
+        Pattern pattern = Pattern.compile("[^\\w*/+.=)(-]");
+        Matcher matcher = pattern.matcher(expression);
+        if (matcher.find())
+            throw new Exception("Incorrect value. Invalid operator symbol");
+    }
 
-            if ((!Character.isLetterOrDigit(valueChar[i]) && !(valueChar[i] == '-'))
-                    && (i == valueChar.length - 1
-                    || (!Character.isLetterOrDigit(valueChar[i + 1])
-                    && valueChar[i] != ')' && valueChar[i] != '('
-                    && valueChar[i + 1] != ')' && valueChar[i + 1] != '('
-                    && valueChar[i + 1] != '-')))
-                throw new Exception("Incorrect value. The sign must be followed by a number or a reference");
+    private void validateOperatorIsEndChar(char[] expression) throws Exception {
+        char endChar = expression[expression.length - 1];
+        if (endChar == '*' || endChar == '/'
+                || endChar == '+' || endChar == '.'
+                || endChar == '=' || endChar == '('
+                || endChar == '-')
+            throw new Exception("Incorrect value. Operator cannot be at the end of an expression");
+    }
 
-            if (valueChar[i] == '/' && valueChar[i + 1] == '0')
-                throw new Exception("Incorrect value. Can't divide by zero");
-
-            if (valueChar[i] == '(') bracketNumberDifference++;
-            else if (valueChar[i] == ')') bracketNumberDifference--;
-
-            if (valueChar[i] == '-') {
-                if (i == 0) {
-                    if (!Character.isLetterOrDigit(valueChar[i + 1]))
-                        throw new Exception("Incorrect value. Incorrect location of the '-' sign");
-                } else {
-                    if (i == valueChar.length - 1)
-                        throw new Exception("Incorrect value. Sing '-' at the end of the expression");
-                    if (!(Character.isLetterOrDigit(valueChar[i + 1]) || Character.isDigit(valueChar[i - 1])))
-                        if (!((valueChar[i - 1]) == ')' && (valueChar[i + 1]) == '('))
-                            throw new Exception("Incorrect value. Incorrect location of the '-' sign");
-                }
-            }
+    private void validateDefectiveBracket(char[] expression) throws Exception {
+        int bracketNumberDifference = 0;
+        for (int i = 1; i < expression.length; i++) {
+            if (expression[i] == '(') bracketNumberDifference++;
+            else if (expression[i] == ')') bracketNumberDifference--;
         }
-
         if (bracketNumberDifference != 0)
             throw new Exception("Incorrect value. The number of opening brackets is not equal to the number of closing brackets");
+    }
+
+    private void validateBracketIsEmpty(String expression) throws Exception {
+        Pattern pattern = Pattern.compile("\\(\\)");
+        Matcher matcher = pattern.matcher(expression);
+        if (matcher.find())
+            throw new Exception("Brackets cannot be empty");
+    }
+
+    private void validateCorrectSequenceOperatorsAndNumbers(String expression) throws Exception {
+        Pattern pattern = Pattern.compile("[*/+][*/+]");
+        Matcher matcher = pattern.matcher(expression);
+        if (matcher.find())
+            throw new Exception("Incorrect value. The operator must be followed by a number or a reference");
+    }
+
+    private void validateDivideByZero(String expression) throws Exception {
+        Pattern pattern = Pattern.compile("\\/0");
+        Matcher matcher = pattern.matcher(expression);
+        if (matcher.find())
+            throw new Exception("Incorrect value. Can't divide by zero");
+    }
+
+    private void validateSubtraction(String expression) throws Exception {
+        Pattern pattern = Pattern.compile("-[^\\w()]");
+        Matcher matcher = pattern.matcher(expression);
+        if (matcher.find())
+            throw new Exception("Incorrect value. Incorrect location of the '-' sign");
     }
 
     private void validateNumber(String value) throws Exception {
