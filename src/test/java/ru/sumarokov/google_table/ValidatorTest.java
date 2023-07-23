@@ -159,19 +159,19 @@ public class ValidatorTest {
     @Test()
     public void validateDotBeforeMultiply() {
         waitExceptionFromValidator("=1+2*(3+4/2-(1+2)).*2+1",
-                "Incorrect value. Incorrect location of the '-' sign");
+                "Incorrect value. Incorrect location of the '.' sign");
     }
 
     @Test()
     public void validateDotBeforeNumber() {
         waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*.2+1",
-                "Incorrect value. Incorrect location of the '-' sign");
+                "Incorrect value. Incorrect location of the '.' sign");
     }
 
     @Test()
     public void validateDotAfterNumber() {
         waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2.+1",
-                "Incorrect value. Incorrect location of the '-' sign");
+                "Incorrect value. Incorrect location of the '.' sign");
     }
 
     @Test

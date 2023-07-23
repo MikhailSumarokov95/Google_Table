@@ -25,6 +25,7 @@ public class Validator {
         validateCorrectSequenceOperatorsAndNumbers(expression);
         validateDivideByZero(expression);
         validateSubtraction(expression);
+        validateCorrectLocationDot(expression);
     }
 
     private void validateEquals(char[] expression) throws Exception {
@@ -34,7 +35,7 @@ public class Validator {
     }
 
     private void validateIncorrectOperator(String expression) throws Exception {
-        Pattern pattern = Pattern.compile("[^\\w*/+.=)(-]");
+        Pattern pattern = Pattern.compile("[^а-яА-ЯёЁa-zA-Z0-9*/+.=)(-]");
         Matcher matcher = pattern.matcher(expression);
         if (matcher.find())
             throw new Exception("Incorrect value. Invalid operator symbol");
@@ -85,6 +86,13 @@ public class Validator {
         Matcher matcher = pattern.matcher(expression);
         if (matcher.find())
             throw new Exception("Incorrect value. Incorrect location of the '-' sign");
+    }
+
+    private void validateCorrectLocationDot(String expression) throws Exception {
+        Pattern pattern = Pattern.compile("[^0-9]\\.|\\.[^0-9]");
+        Matcher matcher = pattern.matcher(expression);
+        if (matcher.find())
+            throw new Exception("Incorrect value. Incorrect location of the '.' sign");
     }
 
     private void validateNumber(String value) throws Exception {
