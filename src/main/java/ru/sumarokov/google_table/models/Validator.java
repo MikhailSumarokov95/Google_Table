@@ -12,6 +12,8 @@ public class Validator {
         if (value.equals("")) throw new Exception("Enter the correct number");
         else if (value.charAt(0) == '=') validateFormula(value);
         else validateNumber(value);
+        //TODO: запретить вприсывать в ячейки текст, если это не формула
+        //TODO: использовать throwIllegalCommandException
     }
 
     private void validateFormula(String expression) throws Exception {
@@ -26,6 +28,7 @@ public class Validator {
         validateDivideByZero(expression);
         validateSubtraction(expression);
         validateCorrectLocationDot(expression);
+
     }
 
     private void validateEquals(char[] expression) throws Exception {

@@ -2,33 +2,25 @@ package ru.sumarokov.google_table.models;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.sumarokov.google_table.models.furmulas.*;
 
 @Component
 public class TableModel {
 
-    private final ValueParser valueParser;
+    private final Parser parser;
     private final Calculator calculator;
-    private final Validator validator;
 
     @Autowired
-    public TableModel(ValueParser valueParser, Calculator calculator, Validator validator) {
-        this.valueParser = valueParser;
+    public TableModel(Parser parser, Calculator calculator) {
+        this.parser = parser;
         this.calculator = calculator;
-        this.validator = validator;
     }
 
     public void changeTable(Table table, Cell cell) {
-        String value = cell.getValue();
-
+        String value = "";
         try {
-            validator.validate(value);
-
-            if (valueParser.isFormula(value)) {
-                value = valueParser.parseFormula(value, table);
-                value = calculator.calculate(value);
-            }
-            else value = String.valueOf(Double.parseDouble(value));
-
+            Formula formula = parser.parse(table, cell);
+            value = calculator.calculate(formula);
         } catch (Exception ex) {
             value = ex.getMessage();
         }

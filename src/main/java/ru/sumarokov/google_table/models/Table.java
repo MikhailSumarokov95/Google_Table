@@ -10,22 +10,22 @@ import java.util.List;
 public class Table {
 
     private final List<Cell> cells;
-    private final Cell a1 = new Cell("a", "1");
-    private final Cell b1 = new Cell("b", "1");
-    private final Cell c1 = new Cell("c", "1");
-    private final Cell d1 = new Cell("d", "1");
-    private final Cell a2 = new Cell("a", "2");
-    private final Cell b2 = new Cell("b", "2");
-    private final Cell c2 = new Cell("c", "2");
-    private final Cell d2 = new Cell("d", "2");
-    private final Cell a3 = new Cell("a", "3");
-    private final Cell b3 = new Cell("b", "3");
-    private final Cell c3 = new Cell("c", "3");
-    private final Cell d3 = new Cell("d", "3");
-    private final Cell a4 = new Cell("1", "4");
-    private final Cell b4 = new Cell("b", "4");
-    private final Cell c4 = new Cell("c", "4");
-    private final Cell d4 = new Cell("d", "4");
+    private final Cell a1 = new Cell("A", "1");
+    private final Cell b1 = new Cell("B", "1");
+    private final Cell c1 = new Cell("C", "1");
+    private final Cell d1 = new Cell("D", "1");
+    private final Cell a2 = new Cell("A", "2");
+    private final Cell b2 = new Cell("B", "2");
+    private final Cell c2 = new Cell("C", "2");
+    private final Cell d2 = new Cell("D", "2");
+    private final Cell a3 = new Cell("A", "3");
+    private final Cell b3 = new Cell("B", "3");
+    private final Cell c3 = new Cell("C", "3");
+    private final Cell d3 = new Cell("D", "3");
+    private final Cell a4 = new Cell("A", "4");
+    private final Cell b4 = new Cell("B", "4");
+    private final Cell c4 = new Cell("C", "4");
+    private final Cell d4 = new Cell("D", "4");
 
     public Table() {
         cells = new ArrayList<>();
@@ -55,11 +55,9 @@ public class Table {
         return b1;
     }
 
-    public Cell getC1() {
-        return c1; }
+    public Cell getC1() { return c1; }
 
-    public Cell getD1() {
-        return d1; }
+    public Cell getD1() { return d1; }
 
     public Cell getA2() {
         return a2;
@@ -116,7 +114,7 @@ public class Table {
         return null;
     }
 
-    public String getValueCell(String id) {//
+    public String getValueCell(String id) {
         for (int i = 0; i < cells.size(); i++)
             if (cells.get(i).getId().equals(id))
                 return cells.get(i).getValue();

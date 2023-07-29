@@ -8,7 +8,6 @@ public class Cell {
     private final String defaultValue = "";
     private String value;
 
-
     public Cell(String column, String line) {
         this.line = line;
         this.column = column;

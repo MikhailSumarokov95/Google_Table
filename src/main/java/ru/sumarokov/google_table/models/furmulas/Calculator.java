@@ -1,15 +1,28 @@
-package ru.sumarokov.google_table.models;
+package ru.sumarokov.google_table.models.furmulas;
 
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 @Component
 public class Calculator {
 
-    public String calculate(String expression) throws Exception {
+    public String calculate(Formula formula) throws Exception {
+        switch (formula.getType()) {
+            case Number: return formula.args.get(0);
+            case Expression: return calculateExpression(formula.args.get(0));
+            case Sum: return calculateSum(formula.args);
+            default: throw new Exception("No such formula");
+        }
+    }
+
+    private String calculateSum(List<String> args) {
+        double result = 0;
+        for (String arg : args)
+            result += Double.parseDouble(arg);
+        return String.valueOf(result);
+    }
+
+    private String calculateExpression(String expression) throws Exception {
         Stack<Double> numbers = new Stack<>();
         Stack<String> operations = new Stack<>();
         List<String> tokens = parseToListToken(expression);
