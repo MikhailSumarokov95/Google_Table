@@ -8,11 +8,15 @@ public class Calculator {
 
     public String calculate(Formula formula) throws Exception {
         switch (formula.getType()) {
-            case Number: return formula.args.get(0);
+            case Number: return calculateNumber(formula.args.get(0));
             case Expression: return calculateExpression(formula.args.get(0));
             case Sum: return calculateSum(formula.args);
             default: throw new Exception("No such formula");
         }
+    }
+
+    private String calculateNumber(String number) {
+        return String.valueOf(Double.parseDouble(number));
     }
 
     private String calculateSum(List<String> args) {
