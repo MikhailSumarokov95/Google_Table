@@ -115,15 +115,12 @@ public class Table {
     }
 
     public String getValueCell(String id) {
-        for (int i = 0; i < cells.size(); i++)
-            if (cells.get(i).getId().equals(id))
-                return cells.get(i).getValue();
-        return null;
+        return getCell(id).getValue();
     }
 
     public Cell getCell(String id) {
         for (int i = 0; i < cells.size(); i++)
-            if (cells.get(i).getId().equals(id))
+            if (cells.get(i).isSameId(id))
                 return cells.get(i);
         return null;
     }

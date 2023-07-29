@@ -37,7 +37,7 @@ public class Parser {
 
         for (int i = 1; i < value.length(); i++) {
             if (Character.isLetter(value.charAt(i))) {
-                String id = (String.valueOf(value.charAt(i)) + value.charAt(i + 1)).toLowerCase();
+                String id = String.valueOf(value.charAt(i)) + value.charAt(i + 1);
                 String valueCell = table.getValueCell(id);
                 expression.append(valueCell);
             }

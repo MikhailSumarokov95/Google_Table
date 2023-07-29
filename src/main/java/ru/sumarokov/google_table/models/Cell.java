@@ -37,6 +37,10 @@ public class Cell {
         return defaultValue;
     }
 
+    public boolean isSameId(String id) {
+        return getId().equalsIgnoreCase(id);
+    }
+
     @Override
     public String toString() {
         return "Cell{" +
