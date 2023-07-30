@@ -1,5 +1,6 @@
 package ru.sumarokov.google_table.models;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.sumarokov.google_table.models.furmulas.*;
 import java.util.*;
@@ -8,9 +9,16 @@ import java.util.regex.*;
 @Component
 public class Parser {
 
-    // Validator
+    Validator validator;
 
-    public Formula parse(Table table, Cell cell) {
+    @Autowired
+    public Parser(Validator validator) {
+        this.validator = validator;
+    }
+
+    public Formula parse(Table table, Cell cell) throws IllegalCommandException{
+        validator.validate(table, cell);
+
         String value = cell.getValue().toUpperCase();
 
         if (value.startsWith(FormulaPrefixes.EXPRESSION))

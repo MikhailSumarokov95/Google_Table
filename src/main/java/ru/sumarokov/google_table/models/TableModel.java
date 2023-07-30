@@ -21,7 +21,7 @@ public class TableModel {
         try {
             Formula formula = parser.parse(table, cell);
             value = calculator.calculate(formula);
-        } catch (Exception ex) {
+        } catch (IllegalCommandException ex) {
             value = ex.getMessage();
         }
         table.getCell(cell.getId()).setValue(value);

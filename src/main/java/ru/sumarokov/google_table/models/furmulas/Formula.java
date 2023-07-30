@@ -2,6 +2,7 @@ package ru.sumarokov.google_table.models.furmulas;
 
 import java.util.List;
 
+//TODO: создавать объект с помощью Spring
 public class Formula {
 
     public final FormulaType type;

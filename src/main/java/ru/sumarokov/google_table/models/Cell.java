@@ -15,6 +15,13 @@ public class Cell {
         this.value = defaultValue;
     }
 
+    public Cell(String column, String line, String value) {
+        this.line = line;
+        this.column = column;
+        this.id = column + line;
+        this.value = value;
+    }
+
     public String getValue() {
         return value;
     }

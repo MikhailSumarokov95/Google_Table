@@ -2,6 +2,9 @@ package ru.sumarokov.google_table;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.sumarokov.google_table.models.Cell;
+import ru.sumarokov.google_table.models.IllegalCommandException;
+import ru.sumarokov.google_table.models.Table;
 import ru.sumarokov.google_table.models.Validator;
 
 public class ValidatorTest {
@@ -10,195 +13,322 @@ public class ValidatorTest {
 
     @Test
     public void validateCorrectExpression() {
-        String expression = "=1+2*(3+4/2-(1+-2))*2+1+(20.3+13)*(1+21)";
+        Cell cell = new Cell("A", "1",
+                "=1+2*(3+4/2-(1+-2))*2+1+(20.3+13)*(1+21)");
         try {
-            validator.validate(expression);
+            validator.validate(getCorrectTable(), cell);
         } catch (Exception ex) {
+            Assertions.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void validateCorrectFormulaSUMFirst() {
+        Cell cell = new Cell("A", "1","SUM(B1:B3)");
+        try {
+            validator.validate(getCorrectTable(), cell);
+        } catch (Exception ex) {
+            Assertions.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void validateCorrectFormulaSUMSecond() {
+        Cell cell = new Cell("A", "1","SUM(A2:C2)");
+        try {
+            validator.validate(getCorrectTable(), cell);
+        } catch (Exception ex) {
+            Assertions.fail(ex.getMessage());
+        }
+    }
+
+    @Test
+    public void validateCorrectNumber() {
+        Cell cell = new Cell("A", "1", "512");
+        try {
+            validator.validate(getCorrectTable(), cell);
+        } catch (IllegalCommandException ex) {
             Assertions.fail(ex.getMessage());
         }
     }
 
     @Test()
     public void validateTwoEquals() {
-        waitExceptionFromValidator("=1=2*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1=2*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. 2 equals");
     }
 
     @Test()
     public void validateIncorrectOperatorExclamationPoint() {
-        waitExceptionFromValidator("=1!2*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1!2*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Invalid operator symbol");
     }
 
     @Test()
     public void validateIncorrectOperatorUnderscore() {
-        waitExceptionFromValidator("=1_2*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1_2*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Invalid operator symbol");
     }
 
     @Test()
     public void validateIncorrectOperatorAt() {
-        waitExceptionFromValidator("=1@2*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1@2*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Invalid operator symbol");
     }
 
     @Test()
     public void validateOperatorPlusIsEndChar() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2+1+",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2+1+");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Operator cannot be at the end of an expression");
     }
 
     @Test()
     public void validateOperatorMinusIsEndChar() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2+1-",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2+1-");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Operator cannot be at the end of an expression");
     }
 
     @Test()
     public void validateOperatorMultiplyIsEndChar() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2+1*",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2+1*");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Operator cannot be at the end of an expression");
     }
 
     @Test()
     public void validateOperatorDivideIsEndChar() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2+1/",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2+1/");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Operator cannot be at the end of an expression");
     }
 
     @Test()
     public void validateOperatorDotIsEndChar() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2+1.",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2+1.");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Operator cannot be at the end of an expression");
     }
 
     @Test()
     public void validateOperatorBracketOpensIsEndChar() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2+1(",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2+1(");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Operator cannot be at the end of an expression");
     }
 
     @Test()
     public void validateDefectiveBracket() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2)+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2)+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The number of opening brackets is not equal to the number of closing brackets");
     }
 
     @Test()
     public void validateExtraClosingBracket() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2)+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2)+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The number of opening brackets is not equal to the number of closing brackets");
     }
 
     @Test()
     public void validateExtraOpeningBracket() {
-        waitExceptionFromValidator("=(1+2*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=(1+2*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The number of opening brackets is not equal to the number of closing brackets");
     }
 
     @Test()
     public void validateEmptyBrackets() {
-        waitExceptionFromValidator("=1+2*(()3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2*(()3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Brackets cannot be empty");
     }
 
     @Test()
     public void validateTwoPlusesNextToEachOther() {
-        waitExceptionFromValidator("=1+2*(3++4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3++4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The operator must be followed by a number or a reference");
     }
 
     @Test()
     public void validateTwoMultiplyNextToEachOther() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))**2+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))**2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The operator must be followed by a number or a reference");
     }
 
     @Test()
     public void validateTwoDivideNextToEachOther() {
-        waitExceptionFromValidator("=1+2*(3+4//2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4//2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The operator must be followed by a number or a reference");
     }
 
     @Test()
     public void validateDivideBeforeMultiply() {
-        waitExceptionFromValidator("=1+2/*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2/*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The operator must be followed by a number or a reference");
     }
 
     @Test()
     public void validatePlusBeforeMultiply() {
-        waitExceptionFromValidator("=1+2+*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2+*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The operator must be followed by a number or a reference");
     }
 
     @Test()
     public void validateMultiplyBeforePlus() {
-        waitExceptionFromValidator("=1+2*+(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2*+(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. The operator must be followed by a number or a reference");
     }
 
     @Test()
     public void validateDivideByZero() {
-        waitExceptionFromValidator("=1+2*(3+4/0-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/0-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Can't divide by zero");
     }
 
     @Test()
     public void validateMinusBeforeMultiply() {
-        waitExceptionFromValidator("=1+2-*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1+2-*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Incorrect location of the '-' sign");
     }
 
     @Test()
     public void validateMinusBeforePlus() {
-        waitExceptionFromValidator("=1-+2*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "=1-+2*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Incorrect location of the '-' sign");
     }
 
     @Test()
     public void validateDotBeforeMultiply() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2)).*2+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2)).*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Incorrect location of the '.' sign");
     }
 
     @Test()
     public void validateDotBeforeNumber() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*.2+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*.2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Incorrect location of the '.' sign");
     }
 
     @Test()
     public void validateDotAfterNumber() {
-        waitExceptionFromValidator("=1+2*(3+4/2-(1+2))*2.+1",
+        Cell cell = new Cell("A", "1", "=1+2*(3+4/2-(1+2))*2.+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Incorrect value. Incorrect location of the '.' sign");
     }
 
     @Test
-    public void validateCorrectNumber() {
-        String value = "512";
-        try {
-            validator.validate(value);
-        } catch (Exception ex) {
-            Assertions.fail(ex.getMessage());
-        }
-    }
-
-    @Test
     public void validateNumberWithMultiply() {
-        waitExceptionFromValidator("512*",
+        Cell cell = new Cell("A", "1", "512*");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Enter the correct number");
     }
 
     @Test
     public void validateExpressionWithoutEquals() {
-        waitExceptionFromValidator("1+2*(3+4/2-(1+2))*2+1",
+        Cell cell = new Cell("A", "1", "1+2*(3+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
                 "Enter the correct number");
     }
 
-    private void waitExceptionFromValidator(String expression, String expectedMessage) {
+    @Test
+    public void validateCellIsNull() {
+        waitExceptionFromValidator(getCorrectTable(), null,
+                "Enter the value");
+    }
+
+    @Test
+    public void validateValueIsNull() {
+        Cell cell = new Cell("A", "1", null);
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Enter the value");
+    }
+
+    @Test
+    public void validateValueIsEmpty() {
+        Cell cell = new Cell("A", "1", "");
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Enter the value");
+    }
+
+    @Test
+    public void validateReferenceToCellThatDoesNotExit() {
+        Cell cell = new Cell("A", "1", "1+2*(F9+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Incorrect value. There is a reference to a non-existent cell");
+    }
+
+    @Test
+    public void validateReferenceToCellThatEmpty() {
+        Cell cell = new Cell("A", "1", "1+2*(B1+4/2-(1+2))*2+1");
+        Table table = getCorrectTable();
+        table.setValueCell("B1", "");
+        waitExceptionFromValidator(table, cell,
+                "Incorrect value. You can't refer to an empty cell");
+    }
+
+    @Test
+    public void validateCellReferenceToItself() {
+        Cell cell = new Cell("A", "1", "1+2*(A1+4/2-(1+2))*2+1");
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Incorrect value. Cell must not refer to itself");
+    }
+
+    @Test
+    public void validateSUMWithOneArg() {
+        Cell cell = new Cell("A", "1", "SUM(:B3)");
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Incorrect value.Enter the correct value of the SUM formula");
+    }
+
+    @Test
+    public void validateSUMDiagonalRange() {
+        Cell cell = new Cell("A", "1", "SUM(A2:B3)");
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Incorrect value. Cells must be in the same line or column");
+    }
+
+    @Test
+    public void validateSUMReferenceCellToItselfInCellRange() {
+        Cell cell = new Cell("B", "2", "SUM(B1:B3)");
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Incorrect value. Cell cannot be inside a range");
+    }
+
+    private void waitExceptionFromValidator(Table table, Cell cell, String expectedMessage) {
         Exception thrown = Assertions.assertThrows(Exception.class, () ->
-                validator.validate(expression));
+                validator.validate(table, cell));
         Assertions.assertEquals(expectedMessage, thrown.getMessage());
+    }
+
+    private Table getCorrectTable() {
+        Table table = new Table();
+        table.setValueCell("A1", "1");
+        table.setValueCell("A2", "0,12333333333333333333");
+        table.setValueCell("A3", "321");
+        table.setValueCell("B1", "21333333333333333333");
+        table.setValueCell("B2", "21333333333333333333");
+        table.setValueCell("B3", "0");
+        table.setValueCell("C1", "-1");
+        table.setValueCell("C2", "-1233333333333333333333333");
+        table.setValueCell("C3", "-0,12333");
+        return table;
     }
 }

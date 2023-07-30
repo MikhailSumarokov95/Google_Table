@@ -122,7 +122,21 @@ public class Table {
         for (int i = 0; i < cells.size(); i++)
             if (cells.get(i).isSameId(id))
                 return cells.get(i);
-        return null;
+        throw new IndexOutOfBoundsException("The table does not contain such a cell");
+    }
+
+    public void setValueCell(String id, String value) {
+        Cell cell = getCell(id);
+        cell.setValue(value);
+    }
+
+    public boolean hasCell(String id) {
+        try {
+            getCell(id);
+        } catch (IndexOutOfBoundsException ex) {
+            return false;
+        }
+        return true;
     }
 
     @Override
