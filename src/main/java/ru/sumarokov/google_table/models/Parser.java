@@ -1,10 +1,7 @@
 package ru.sumarokov.google_table.models;
 
 import org.springframework.stereotype.Component;
-import ru.sumarokov.google_table.models.furmulas.Formula;
-import ru.sumarokov.google_table.models.furmulas.FormulaPrefixes;
-import ru.sumarokov.google_table.models.furmulas.FormulaType;
-
+import ru.sumarokov.google_table.models.furmulas.*;
 import java.util.*;
 import java.util.regex.*;
 
@@ -44,9 +41,7 @@ public class Parser {
             else if (i != 1 && Character.isLetter(value.charAt(i - 1))) continue;
             else expression.append(value.charAt(i));
         }
-        List<String> args = new ArrayList<>();
-        args.add(expression.toString());
-
+        List<String> args = parseToListToken(expression.toString());
         return new Formula(FormulaType.Expression, args);
     }
 
@@ -90,5 +85,24 @@ public class Parser {
             }
         }
         return args;
+    }
+
+    private List<String> parseToListToken(String expression) {
+        List<String> listTokens = new ArrayList<>(expression.length());
+
+        String token = new String();
+        for (int i = 0; i < expression.length(); i++) {
+            token += expression.charAt(i);
+            if (i != (expression.length() - 1)
+                    && ((Character.isDigit(expression.charAt(i)) || expression.charAt(i) == '.'))
+                    && ((Character.isDigit(expression.charAt(i + 1))) || expression.charAt(i + 1) == '.')) continue;
+            else if ((expression.charAt(i) == '-' && Character.isDigit(expression.charAt(i + 1)))
+                    && (i == 0 || !Character.isDigit(expression.charAt(i - 1)))) continue;
+            else {
+                listTokens.add(token);
+                token = "";
+            }
+        }
+        return listTokens;
     }
 }

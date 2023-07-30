@@ -9,7 +9,7 @@ public class Calculator {
     public String calculate(Formula formula) throws Exception {
         switch (formula.getType()) {
             case Number: return calculateNumber(formula.args.get(0));
-            case Expression: return calculateExpression(formula.args.get(0));
+            case Expression: return calculateExpression(formula.args);
             case Sum: return calculateSum(formula.args);
             default: throw new Exception("No such formula");
         }
@@ -26,10 +26,9 @@ public class Calculator {
         return String.valueOf(result);
     }
 
-    private String calculateExpression(String expression) throws Exception {
+    private String calculateExpression(List<String> tokens) throws Exception {
         Stack<Double> numbers = new Stack<>();
         Stack<String> operations = new Stack<>();
-        List<String> tokens = parseToListToken(expression);
 
         for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
@@ -105,24 +104,5 @@ public class Calculator {
             return false;
         }
         return true;
-    }
-
-    private List<String> parseToListToken(String expression) {
-        List<String> listExpression = new ArrayList<>(expression.length());
-
-        String token = new String();
-        for (int i = 0; i < expression.length(); i++) {
-            token += expression.charAt(i);
-            if (i != (expression.length() - 1)
-                    && ((Character.isDigit(expression.charAt(i)) || expression.charAt(i) == '.'))
-                    && ((Character.isDigit(expression.charAt(i + 1))) || expression.charAt(i + 1) == '.')) continue;
-            else if ((expression.charAt(i) == '-' && Character.isDigit(expression.charAt(i + 1)))
-                     && (i == 0 || !Character.isDigit(expression.charAt(i - 1))) ) continue;
-            else {
-                listExpression.add(token);
-                token = "";
-            }
-        }
-        return listExpression;
     }
 }
