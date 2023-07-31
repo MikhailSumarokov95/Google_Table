@@ -10,9 +10,9 @@ public class Calculator {
 
     public String calculate(Formula formula) throws IllegalCommandException {
         switch (formula.getType()) {
-            case Number: return calculateNumber(formula.args.get(0));
-            case Expression: return calculateExpression(formula.args);
-            case Sum: return calculateSum(formula.args);
+            case Number: return calculateNumber(formula.getArgs().get(0));
+            case Expression: return calculateExpression(formula.getArgs());
+            case Sum: return calculateSum(formula.getArgs());
             default: throw new IllegalCommandException("No such formula");
         }
     }

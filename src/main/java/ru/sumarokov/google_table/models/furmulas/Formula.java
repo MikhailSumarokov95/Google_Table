@@ -2,11 +2,10 @@ package ru.sumarokov.google_table.models.furmulas;
 
 import java.util.List;
 
-//TODO: создавать объект с помощью Spring
 public class Formula {
 
-    public final FormulaType type;
-    public final List<String> args;
+    private final FormulaType type;
+    private final List<String> args;
 
     public Formula(FormulaType type, List<String> args) {
         this.type = type;
