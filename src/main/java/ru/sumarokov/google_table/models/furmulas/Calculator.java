@@ -50,10 +50,12 @@ public class Calculator {
                 operations.pop();
                 continue;
             }
+
             if (isNumeric(token)) numbers.push(Double.parseDouble(token));
             else operations.push(token);
         }
-        while (!operations.empty()) {
+
+        for (int i = 0; i < operations.size(); i++) {
             performAnOperation(numbers, operations);
         }
         return numbers.pop().toString();
