@@ -1,18 +1,36 @@
-package ru.sumarokov.google_table.models;
+package ru.sumarokov.google_table.models.furmulas;
 
 import org.springframework.stereotype.Component;
+import ru.sumarokov.google_table.models.IllegalCommandException;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 @Component
 public class Calculator {
 
-    public String calculate(String expression) throws Exception {
+    public String calculate(Formula formula) throws IllegalCommandException {
+        switch (formula.getType()) {
+            case Number: return calculateNumber(formula.args.get(0));
+            case Expression: return calculateExpression(formula.args);
+            case Sum: return calculateSum(formula.args);
+            default: throw new IllegalCommandException("No such formula");
+        }
+    }
+
+    private String calculateNumber(String number) {
+        return String.valueOf(Double.parseDouble(number));
+    }
+
+    private String calculateSum(List<String> args) {
+        double result = 0;
+        for (String arg : args)
+            result += Double.parseDouble(arg);
+        return String.valueOf(result);
+    }
+
+    private String calculateExpression(List<String> tokens) throws IllegalCommandException {
         Stack<Double> numbers = new Stack<>();
         Stack<String> operations = new Stack<>();
-        List<String> tokens = parseToListToken(expression);
 
         for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
@@ -41,7 +59,7 @@ public class Calculator {
         return numbers.pop().toString();
     }
 
-    private void performAnOperation(Stack<Double> numbers, Stack<String> operations) throws Exception {
+    private void performAnOperation(Stack<Double> numbers, Stack<String> operations) throws IllegalCommandException {
         Double secondNumber = numbers.pop();
         Double firstNumber = numbers.pop();
         Double result = 0.0;
@@ -57,7 +75,7 @@ public class Calculator {
                 break;
             case "/":
                 if (secondNumber.equals(0d))
-                    throw new Exception("Incorrect value. During the calculation, a division by zero has occurred");
+                    throw new IllegalCommandException("Incorrect value. During the calculation, a division by zero has occurred");
                 result = firstNumber / secondNumber;
                 break;
         }
@@ -88,24 +106,5 @@ public class Calculator {
             return false;
         }
         return true;
-    }
-
-    private List<String> parseToListToken(String expression) {
-        List<String> listExpression = new ArrayList<>(expression.length());
-
-        String token = new String();
-        for (int i = 0; i < expression.length(); i++) {
-            token += expression.charAt(i);
-            if (i != (expression.length() - 1)
-                    && ((Character.isDigit(expression.charAt(i)) || expression.charAt(i) == '.'))
-                    && ((Character.isDigit(expression.charAt(i + 1))) || expression.charAt(i + 1) == '.')) continue;
-            else if ((expression.charAt(i) == '-' && Character.isDigit(expression.charAt(i + 1)))
-                     && (i == 0 || !Character.isDigit(expression.charAt(i - 1))) ) continue;
-            else {
-                listExpression.add(token);
-                token = "";
-            }
-        }
-        return listExpression;
     }
 }
