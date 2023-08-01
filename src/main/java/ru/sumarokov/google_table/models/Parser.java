@@ -2,6 +2,7 @@ package ru.sumarokov.google_table.models;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.sumarokov.google_table.models.dao.TableDAO;
 import ru.sumarokov.google_table.models.furmulas.*;
 import java.util.*;
 import java.util.regex.*;
@@ -16,16 +17,16 @@ public class Parser {
         this.validator = validator;
     }
 
-    public Formula parse(Table table, Cell cell) throws IllegalCommandException{
-        validator.validate(table, cell);
+    public Formula parse(TableDAO tableDAO, Cell cell) throws IllegalCommandException{
+        validator.validate(tableDAO, cell);
 
         String value = cell.getValue().toUpperCase();
 
         if (value.startsWith(FormulaPrefixes.EXPRESSION))
-            return parseExpression(table, cell);
+            return parseExpression(tableDAO, cell);
 
         else if (value.startsWith(FormulaPrefixes.SUM))
-            return parseSum(table, value);
+            return parseSum(tableDAO, value);
 
         else return parseNumber(value);
     }
@@ -36,14 +37,14 @@ public class Parser {
         return new Formula(FormulaType.Number, args);
      }
 
-    private Formula parseExpression(Table table, Cell cell) {
+    private Formula parseExpression(TableDAO tableDAO, Cell cell) {
         StringBuilder expression = new StringBuilder();
         String value = cell.getValue();
 
         for (int i = 1; i < value.length(); i++) {
             if (Character.isLetter(value.charAt(i))) {
                 String id = String.valueOf(value.charAt(i)) + value.charAt(i + 1);
-                String valueCell = table.getValueCell(id);
+                String valueCell = tableDAO.getValueCell(id);
                 expression.append(valueCell);
             }
             else if (i != 1 && Character.isLetter(value.charAt(i - 1))) continue;
@@ -53,7 +54,7 @@ public class Parser {
         return new Formula(FormulaType.Expression, args);
     }
 
-    private Formula parseSum(Table table, String value) {
+    private Formula parseSum(TableDAO tableDAO, String value) {
         Pattern pattern = Pattern.compile("[A-Z][0-9]:[A-Z][0-9]");
         Matcher matcher = pattern.matcher(value);
         matcher.find();
@@ -64,7 +65,7 @@ public class Parser {
 
         List<String> argsForSum = getListOfArgs(args[0], args[1]);
         for (int i = 0; i < argsForSum.size(); i++)
-            argsForSum.set(i, table.getValueCell(argsForSum.get(i)));
+            argsForSum.set(i, tableDAO.getValueCell(argsForSum.get(i)));
         return new Formula(FormulaType.Sum, argsForSum);
     }
 

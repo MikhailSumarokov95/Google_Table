@@ -2,28 +2,33 @@ package ru.sumarokov.google_table.models;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.sumarokov.google_table.models.dao.TableDAO;
 import ru.sumarokov.google_table.models.furmulas.*;
 
 @Component
 public class TableModel {
 
+    private TableDAO tableDAO;
     private final Parser parser;
     private final Calculator calculator;
 
     @Autowired
-    public TableModel(Parser parser, Calculator calculator) {
+    public TableModel(Parser parser, Calculator calculator, TableDAO tableDAO) {
         this.parser = parser;
         this.calculator = calculator;
+        this.tableDAO = tableDAO;
     }
 
-    public void changeTable(Table table, Cell cell) {
+    public Cell changeTable(Cell cell) {
         String value = "";
         try {
-            Formula formula = parser.parse(table, cell);
+            Formula formula = parser.parse(tableDAO, cell);
             value = calculator.calculate(formula);
+            tableDAO.setValueCell(cell.getId(), value);
         } catch (IllegalCommandException ex) {
             value = ex.getMessage();
         }
-        table.getCell(cell.getId()).setValue(value);
+        cell.setValue(value);
+        return cell;
     }
 }
