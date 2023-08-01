@@ -2,14 +2,20 @@ package ru.sumarokov.google_table;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import ru.sumarokov.google_table.models.Cell;
 import ru.sumarokov.google_table.models.IllegalCommandException;
-import ru.sumarokov.google_table.models.Table;
 import ru.sumarokov.google_table.models.Validator;
+import ru.sumarokov.google_table.models.dao.TableDAO;
 
 public class ValidatorTest {
 
     private Validator validator = new Validator();
+    private String driverClassName = "org.postgresql.Driver";
+    private String url = "jdbc:postgresql://localhost:5432/test";
+    private String username = "postgres";
+    private String password = "123";
 
     @Test
     public void validateCorrectExpression() {
@@ -272,16 +278,16 @@ public class ValidatorTest {
     public void validateReferenceToCellThatDoesNotExit() {
         Cell cell = new Cell("A", "1", "1+2*(F9+4/2-(1+2))*2+1");
         waitExceptionFromValidator(getCorrectTable(), cell,
-                "Incorrect value. There is a reference to a non-existent cell");
+                "Incorrect value. There is a reference to a non-existent cell or you refer to an empty cell");
     }
 
     @Test
     public void validateReferenceToCellThatEmpty() {
         Cell cell = new Cell("A", "1", "1+2*(B1+4/2-(1+2))*2+1");
-        Table table = getCorrectTable();
-        table.setValueCell("B1", "");
-        waitExceptionFromValidator(table, cell,
-                "Incorrect value. You can't refer to an empty cell");
+        TableDAO tableDAO = getCorrectTable();
+        tableDAO.setValueCell("B1", "");
+        waitExceptionFromValidator(tableDAO, cell,
+                "Incorrect value. There is a reference to a non-existent cell or you refer to an empty cell");
     }
 
     @Test
@@ -312,14 +318,20 @@ public class ValidatorTest {
                 "Incorrect value. Cell cannot be inside a range");
     }
 
-    private void waitExceptionFromValidator(Table table, Cell cell, String expectedMessage) {
+    private void waitExceptionFromValidator(TableDAO table, Cell cell, String expectedMessage) {
         Exception thrown = Assertions.assertThrows(Exception.class, () ->
                 validator.validate(table, cell));
         Assertions.assertEquals(expectedMessage, thrown.getMessage());
     }
 
-    private Table getCorrectTable() {
-        Table table = new Table();
+    private TableDAO getCorrectTable() {
+        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
+
+        TableDAO table = new TableDAO(new JdbcTemplate(dataSource));
         table.setValueCell("A1", "1");
         table.setValueCell("A2", "0,12333333333333333333");
         table.setValueCell("A3", "321");

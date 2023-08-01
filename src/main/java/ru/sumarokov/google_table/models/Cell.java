@@ -44,7 +44,7 @@ public class Cell {
         return defaultValue;
     }
 
-    public boolean isSameId(String id) {
+    public boolean equalsId(String id) {
         return getId().equalsIgnoreCase(id);
     }
 

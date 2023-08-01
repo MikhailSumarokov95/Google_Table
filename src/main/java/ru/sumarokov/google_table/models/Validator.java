@@ -1,15 +1,16 @@
 package ru.sumarokov.google_table.models;
 
 import org.springframework.stereotype.Component;
+import ru.sumarokov.google_table.models.dao.TableDAO;
 import ru.sumarokov.google_table.models.furmulas.FormulaPrefixes;
 import java.util.regex.*;
 
 @Component
 public class Validator {
 
-    public void validate(Table table, Cell cell) throws IllegalCommandException {
+    public void validate(TableDAO tableDAO, Cell cell) throws IllegalCommandException {
         validateEmptyCell(cell);
-        validateReferenceToCellThatDoesNotExitsOrEmpty(table, cell);
+        validateReferenceToCellThatDoesNotExitsOrEmpty(tableDAO, cell);
         validateCellReferenceToItself(cell);
 
         String value = cell.getValue().toUpperCase();
@@ -66,15 +67,13 @@ public class Validator {
             throw new IllegalCommandException("Incorrect value. Cell must not refer to itself");
     }
 
-    private void validateReferenceToCellThatDoesNotExitsOrEmpty(Table table, Cell cell) throws IllegalCommandException {
+    private void validateReferenceToCellThatDoesNotExitsOrEmpty(TableDAO tableDAO, Cell cell) throws IllegalCommandException {
         String value = cell.getValue();
         for (int i = 1; i < value.length(); i++) {
             if (Character.isLetter(value.charAt(i)) && Character.isDigit(value.charAt(i + 1))) {
                 String id = String.valueOf(value.charAt(i)) + value.charAt(i + 1);
-                if (!table.hasCell(id))
-                    throw new IllegalCommandException("Incorrect value. There is a reference to a non-existent cell");
-                else if (table.getValueCell(id).isEmpty())
-                    throw new IllegalCommandException("Incorrect value. You can't refer to an empty cell");
+                if (!tableDAO.hasCell(id) || tableDAO.getValueCell(id).isEmpty())
+                    throw new IllegalCommandException("Incorrect value. There is a reference to a non-existent cell or you refer to an empty cell");
             }
         }
     }

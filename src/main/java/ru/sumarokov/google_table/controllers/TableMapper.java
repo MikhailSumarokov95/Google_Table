@@ -1,13 +1,11 @@
-package ru.sumarokov.google_table.models;
+package ru.sumarokov.google_table.controllers;
 
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import ru.sumarokov.google_table.models.Cell;
+import java.util.*;
 
 @Component
-public class Table {
+public class TableMapper {
 
     private final List<Cell> cells;
     private final Cell a1 = new Cell("A", "1");
@@ -27,7 +25,7 @@ public class Table {
     private final Cell c4 = new Cell("C", "4");
     private final Cell d4 = new Cell("D", "4");
 
-    public Table() {
+    public TableMapper() {
         cells = new ArrayList<>();
         cells.add(a1);
         cells.add(b1);
@@ -114,35 +112,23 @@ public class Table {
         return null;
     }
 
-    public String getValueCell(String id) {
-        return getCell(id).getValue();
-    }
-
-    public Cell getCell(String id) {
+    public void setCell(Cell cell) {
         for (int i = 0; i < cells.size(); i++)
-            if (cells.get(i).isSameId(id))
-                return cells.get(i);
-        throw new IndexOutOfBoundsException("The table does not contain such a cell");
+            if (cells.get(i).equalsId(cell.getId()))
+                cells.get(i).setValue(cell.getValue());
     }
 
-    public void setValueCell(String id, String value) {
-        Cell cell = getCell(id);
-        cell.setValue(value);
-    }
-
-    public boolean hasCell(String id) {
-        try {
-            getCell(id);
-        } catch (IndexOutOfBoundsException ex) {
-            return false;
-        }
-        return true;
+    public void setCells(List<Cell> cells) {
+        if (cells == null) return;
+        for (Cell cell : cells)
+            setCell(cell);
     }
 
     @Override
     public String toString() {
-        return "Table{" +
-                "cells=" + cells +
-                '}';
+        StringBuilder cellsStr = new StringBuilder();
+        for (Cell cell : cells)
+            cellsStr.append(cell.toString());
+        return cellsStr.toString();
     }
 }
