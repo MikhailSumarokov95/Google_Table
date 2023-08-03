@@ -60,6 +60,7 @@ public class Calculator {
      * @throws IllegalCommandException в случае если во время вычисления возникло исключительная ситуация,
      *                                 например деление на ноль
      */
+    //TODO: Заменить Stack на Deque
     private String calculateExpression(List<String> tokens) throws IllegalCommandException {
         Stack<Double> numbers = new Stack<>();
         Stack<String> operations = new Stack<>();
@@ -93,12 +94,35 @@ public class Calculator {
         return numbers.pop().toString();
     }
 
-    //TODO: Изменить получаемые переменные но Double secondNumber, Double firstNumber и String operator и возвращать Double result
+    /**
+     * Достает из списка numbers последние 2 числа
+     * и производит над ними математическую операцию,
+     * взятую из списка operations,
+     * после чего результат операции ложит в список numbers
+     * @param numbers список чисел
+     * @param operations список операций
+     * @throws IllegalCommandException в случае если в списке operations
+     * последний элемент окажется некорректным оператором
+     */
     private void performAnOperation(Stack<Double> numbers, Stack<String> operations) throws IllegalCommandException {
         Double secondNumber = numbers.pop();
         Double firstNumber = numbers.pop();
+        String operator = operations.pop();
+        Double result = performAnOperation(firstNumber, secondNumber, operator);
+        numbers.push(result);
+    }
+
+    /**
+     * Производит математическую операцию
+     * @param firstNumber первый аргумент
+     * @param secondNumber второй аргумент
+     * @param operator оператор
+     * @return результат операции
+     * @throws IllegalCommandException в случае если метод получит некорректный оператор
+     */
+    private Double performAnOperation(Double firstNumber, Double secondNumber, String operator) throws IllegalCommandException {
         Double result = 0.0;
-        switch (operations.pop()) {
+        switch (operator) {
             case "+":
                 result = firstNumber + secondNumber;
                 break;
@@ -114,7 +138,7 @@ public class Calculator {
                 result = firstNumber / secondNumber;
                 break;
         }
-        numbers.push(result);
+        return result;
     }
 
     /**
