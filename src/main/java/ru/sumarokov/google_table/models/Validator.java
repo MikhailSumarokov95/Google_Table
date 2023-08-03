@@ -17,10 +17,7 @@ public class Validator {
      */
 
     public void validate(TableDAO tableDAO, Cell cell) throws IllegalCommandException {
-        //TODO: Создать отдельный метод для общих валидаций
-        validateEmptyCell(cell);
-        validateReferenceToCellThatDoesNotExitsOrEmpty(tableDAO, cell);
-        validateCellReferenceToItself(cell);
+        validateGeneral(tableDAO, cell);
 
         String value = cell.getValue().toUpperCase();
 
@@ -31,6 +28,12 @@ public class Validator {
             validateSum(cell);
 
         else validateNumber(cell);
+    }
+
+    private void validateGeneral(TableDAO tableDAO, Cell cell) throws IllegalCommandException {
+        validateEmptyCell(cell);
+        validateReferenceToCellThatDoesNotExitsOrEmpty(tableDAO, cell);
+        validateCellReferenceToItself(cell);
     }
 
     // Валидация выражения
