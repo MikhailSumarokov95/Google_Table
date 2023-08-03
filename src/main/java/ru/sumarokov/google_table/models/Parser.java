@@ -86,10 +86,10 @@ public class Parser {
      * и поле args со списком чисел
      */
     private Formula parseSum(TableDAO tableDAO, String value) {
-        Pattern pattern = Pattern.compile("[A-Z][0-9]:[A-Z][0-9]");
+        Pattern pattern = Pattern.compile("[A-Za-z][0-9]:[A-Za-z][0-9]");
         Matcher matcher = pattern.matcher(value);
         matcher.find();
-        String[] args = matcher.group().split(":");
+        String[] args = matcher.group().toUpperCase().split(":");
         args = Arrays.stream(args)
                 .sorted()
                 .toArray(String[]::new);

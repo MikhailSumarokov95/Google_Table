@@ -58,6 +58,16 @@ public class ValidatorTest {
         }
     }
 
+    @Test
+    public void validateSUMReferenceCellToDownCase() {
+        Cell cell = new Cell("A", "1", "SUM(b1:b3)");
+        try {
+            validator.validate(getCorrectTable(), cell);
+        } catch (IllegalCommandException ex) {
+            Assertions.fail(ex.getMessage());
+        }
+    }
+
     @Test()
     public void validateTwoEquals() {
         Cell cell = new Cell("A", "1", "=1=2*(3+4/2-(1+2))*2+1");

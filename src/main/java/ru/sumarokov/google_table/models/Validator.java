@@ -183,9 +183,9 @@ public class Validator {
     }
 
     private String[] getRangeArguments(Cell cell) throws IllegalCommandException {
-        Pattern pattern = Pattern.compile("[A-Z][0-9]:[A-Z][0-9]");
+        Pattern pattern = Pattern.compile("[A-Za-z][0-9]:[A-Za-z][0-9]");
         Matcher matcher = pattern.matcher(cell.getValue());
-        if (matcher.find()) return matcher.group().split(":");
+        if (matcher.find()) return matcher.group().toUpperCase().split(":");
         else throw new IllegalCommandException("Incorrect value.Enter the correct value of the SUM formula");
     }
 }
