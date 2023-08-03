@@ -88,17 +88,26 @@ public class Calculator {
         }
 
         for (int i = 0; i < operations.size(); i++) {
-            performAnOperation(numbers, operations);
+            Double secondNumber = numbers.pop();
+            Double firstNumber = numbers.pop();
+            String operator = operations.pop()
+            Double result = performAnOperation(firstNumber, secondNumber, operator);
+            numbers.push(result);
         }
         return numbers.pop().toString();
     }
 
-    //TODO: Изменить получаемые переменные но Double secondNumber, Double firstNumber и String operator и возвращать Double result
-    private void performAnOperation(Stack<Double> numbers, Stack<String> operations) throws IllegalCommandException {
-        Double secondNumber = numbers.pop();
-        Double firstNumber = numbers.pop();
+    /**
+     * Производит математическу операцию над 2-я числами
+     *
+     * @param firstNumber первое число
+     * @param secondNumber второе число
+     * @param operator математический оператор
+     * @return результат операции
+     */
+    private Double performAnOperation(Double firstNumber, Double secondNumber, String operator) throws IllegalCommandException {
         Double result = 0.0;
-        switch (operations.pop()) {
+        switch (operator) {
             case "+":
                 result = firstNumber + secondNumber;
                 break;
@@ -114,7 +123,7 @@ public class Calculator {
                 result = firstNumber / secondNumber;
                 break;
         }
-        numbers.push(result);
+        return result;
     }
 
     /**
