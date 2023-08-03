@@ -23,10 +23,10 @@ public class SpringConfig implements WebMvcConfigurer {
     private final ApplicationContext applicationContext;
 
     //Данные для подключения к БД
-    private String driverClassName = "org.postgresql.Driver";
-    private String url = "jdbc:postgresql://localhost:5432/table";
-    private String username = "postgres";
-    private String password = "123";
+    private final static String DRIVER_CLASS_NAME = "org.postgresql.Driver";
+    private final static String URL = "jdbc:postgresql://localhost:5432/table";
+    private final static String USERNAME = "postgres";
+    private final static String PASSWORD = "123";
 
     @Autowired
     public SpringConfig(ApplicationContext applicationContext) {
@@ -61,10 +61,10 @@ public class SpringConfig implements WebMvcConfigurer {
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        dataSource.setDriverClassName(DRIVER_CLASS_NAME);
+        dataSource.setUrl(URL);
+        dataSource.setUsername(USERNAME);
+        dataSource.setPassword(PASSWORD);
 
         return dataSource;
     }

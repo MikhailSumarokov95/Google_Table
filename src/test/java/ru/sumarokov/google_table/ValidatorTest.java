@@ -4,18 +4,16 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import ru.sumarokov.google_table.models.Cell;
-import ru.sumarokov.google_table.models.IllegalCommandException;
-import ru.sumarokov.google_table.models.Validator;
+import ru.sumarokov.google_table.models.*;
 import ru.sumarokov.google_table.models.dao.TableDAO;
 
 public class ValidatorTest {
 
-    private Validator validator = new Validator();
-    private String driverClassName = "org.postgresql.Driver";
-    private String url = "jdbc:postgresql://localhost:5432/test";
-    private String username = "postgres";
-    private String password = "123";
+    private final Validator validator = new Validator();
+    private final static String DRIVER_CLASS_NAME = "org.postgresql.Driver";
+    private final static String URL = "jdbc:postgresql://localhost:5432/test";
+    private final static String USERNAME = "postgres";
+    private final static String PASSWORD = "123";
 
     @Test
     public void validateCorrectExpression() {
@@ -336,10 +334,10 @@ public class ValidatorTest {
 
     private TableDAO getCorrectTable() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        dataSource.setDriverClassName(DRIVER_CLASS_NAME);
+        dataSource.setUrl(URL);
+        dataSource.setUsername(USERNAME);
+        dataSource.setPassword(PASSWORD);
 
         TableDAO table = new TableDAO(new JdbcTemplate(dataSource));
         table.setValueCell("A1", "1");
