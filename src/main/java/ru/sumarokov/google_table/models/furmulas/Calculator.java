@@ -89,7 +89,11 @@ public class Calculator {
         }
 
         for (int i = 0; i < operations.size(); i++) {
-            performAnOperation(numbers, operations);
+            Double secondNumber = numbers.pop();
+            Double firstNumber = numbers.pop();
+            String operator = operations.pop();
+            Double result = performAnOperation(firstNumber, secondNumber, operator);
+            numbers.push(result);
         }
         return numbers.pop().toString();
     }
@@ -113,12 +117,12 @@ public class Calculator {
     }
 
     /**
-     * Производит математическую операцию
-     * @param firstNumber первый аргумент
-     * @param secondNumber второй аргумент
-     * @param operator оператор
+     * Производит математическу операцию над 2-я числами
+     *
+     * @param firstNumber первое число
+     * @param secondNumber второе число
+     * @param operator математический оператор
      * @return результат операции
-     * @throws IllegalCommandException в случае если метод получит некорректный оператор
      */
     private Double performAnOperation(Double firstNumber, Double secondNumber, String operator) throws IllegalCommandException {
         Double result = 0.0;
