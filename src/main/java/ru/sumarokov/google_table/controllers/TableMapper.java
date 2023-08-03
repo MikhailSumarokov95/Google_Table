@@ -4,10 +4,14 @@ import org.springframework.stereotype.Component;
 import ru.sumarokov.google_table.models.Cell;
 import java.util.*;
 
+/**
+ *  Данный класс необходим для передачи данных о таблице между контроллером и представлением(view)
+ */
 @Component
 public class TableMapper {
 
     private final List<Cell> cells;
+
     private final Cell a1 = new Cell("A", "1");
     private final Cell b1 = new Cell("B", "1");
     private final Cell c1 = new Cell("C", "1");
@@ -45,6 +49,7 @@ public class TableMapper {
         cells.add(d4);
     }
 
+    // Через данные методы таблица в table.html получает значения для заполнения ячеек
     public Cell getA1() {
         return a1;
     }
@@ -105,6 +110,14 @@ public class TableMapper {
         return d4;
     }
 
+    /**
+     * Находит ячейку в которой были переданны данные из представления(view)
+     * При создании объекта TableMapper в представлении, значение заполняется
+     * только у ячейки в которую были введены данные
+     * остальные ячейки заполняются дефолтными значением
+     * Этим и пользуется данный метод для нахождения ячейки с измененным значением
+     * @return ячейку в которую было внесено новое значение
+     */
     public Cell getChangedCell() {
         for (int i = 0; i < cells.size(); i++)
             if (!cells.get(i).getValue().equals(cells.get(i).getDefaultValue()))

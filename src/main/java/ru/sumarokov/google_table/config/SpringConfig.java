@@ -13,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
-
 import javax.sql.DataSource;
 
 @Configuration
@@ -22,6 +21,8 @@ import javax.sql.DataSource;
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
+
+    //Данные для подключения к БД
     private String driverClassName = "org.postgresql.Driver";
     private String url = "jdbc:postgresql://localhost:5432/table";
     private String username = "postgres";

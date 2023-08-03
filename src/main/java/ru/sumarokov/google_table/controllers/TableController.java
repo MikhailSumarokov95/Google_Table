@@ -22,21 +22,26 @@ public class TableController {
         this.tableModel = tableModel;
     }
 
+    /**
+     * Инициализирует представление(view)
+     */
     @GetMapping()
     public String initTable(Model model) {
         model.addAttribute("table", tableMapper);
         return "table/table";
     }
 
+    /**
+     * Получает объект класса TableMapper и находит в нем измененную ячейку
+     * Обращается к TableModel для вычисления значения из данных полученных в измененной ячейки
+     * Затем обновляется представление(view) с новыми данными
+     */
     @PatchMapping()
     public String refreshTable(@ModelAttribute("table") TableMapper tableChanged) {
         Cell cell = tableChanged.getChangedCell();
-        System.out.println("cell is changed: " + cell);
-        System.out.println("tableChanged Do not Changed: " + tableChanged);
         if (cell != null) {
             Cell newCell = tableModel.changeTable(cell);
             tableMapper.setCell(newCell);
-            System.out.println("tableMapper Changed: " + tableMapper);
         }
         return "redirect:/table";
     }

@@ -17,7 +17,17 @@ public class Parser {
         this.validator = validator;
     }
 
-    public Formula parse(TableDAO tableDAO, Cell cell) throws IllegalCommandException{
+    /**
+     * Парсит значение ячейки в объект класса "Formula"
+     * определяющий формулу и её аргументы необходимые для вычисления.
+     * Предварительно отправляет значение ячейки на валидацию
+     *
+     * @param tableDAO БД с данными таблицы,
+     * @param cell     ячейка с данными для парсинга
+     * @return объект класса Formula
+     * @throws IllegalCommandException в случае если cell содержит некорректное значение (поле value)
+     */
+    public Formula parse(TableDAO tableDAO, Cell cell) throws IllegalCommandException {
         validator.validate(tableDAO, cell);
 
         String value = cell.getValue().toUpperCase();
@@ -31,29 +41,50 @@ public class Parser {
         else return parseNumber(value);
     }
 
+    /**
+     * @param value значение для парсинга
+     * @return объект класса Formula с полем type = FormulaType.Number
+     */
     private Formula parseNumber(String value) {
         List<String> args = new ArrayList<>();
         args.add(value);
         return new Formula(FormulaType.Number, args);
-     }
+    }
 
+    /**
+     * Парсит математическое выражение помещая в список аргументов числа и операции над ними
+     * предварительно заменив все ссылки на ячейки из таблицы
+     *
+     * @param tableDAO БД с данными таблицы,
+     * @param cell     ячейка с данными для парсинга
+     * @return объект класса Formula с полем type = FormulaType.Expression
+     * и поле args со списком чисел и операций
+     */
     private Formula parseExpression(TableDAO tableDAO, Cell cell) {
         StringBuilder expression = new StringBuilder();
         String value = cell.getValue();
-
+        //TODO: вынести в отдельный метод замену ссылок на ячейки
         for (int i = 1; i < value.length(); i++) {
             if (Character.isLetter(value.charAt(i))) {
                 String id = String.valueOf(value.charAt(i)) + value.charAt(i + 1);
                 String valueCell = tableDAO.getValueCell(id);
                 expression.append(valueCell);
-            }
-            else if (i != 1 && Character.isLetter(value.charAt(i - 1))) continue;
+            } else if (i != 1 && Character.isLetter(value.charAt(i - 1))) continue;
             else expression.append(value.charAt(i));
         }
         List<String> args = parseToListToken(expression.toString());
         return new Formula(FormulaType.Expression, args);
     }
 
+    /**
+     * Парсит формулу "Sum".
+     * В аргументы заносит список чисел для суммирования
+     *
+     * @param tableDAO БД с данными таблицы,
+     * @param value    данные для парсинга
+     * @return объект класса Formula с полем type = FormulaType.Sum
+     * и поле args со списком чисел
+     */
     private Formula parseSum(TableDAO tableDAO, String value) {
         Pattern pattern = Pattern.compile("[A-Z][0-9]:[A-Z][0-9]");
         Matcher matcher = pattern.matcher(value);
@@ -69,6 +100,16 @@ public class Parser {
         return new Formula(FormulaType.Sum, argsForSum);
     }
 
+    /**
+     * Парсит формулу "Sum".
+     * В аргументы заносит список чисел для суммирования
+     *
+     * @param argFirst  первая ссылка,
+     * @param argSecond последняя ссылка
+     * @return список ссылок на ячейки расположенных в диапазоне между argFirst и argSecond
+     * включая крайние значения
+     * @throws IllegalArgumentException если первая ссылка оказалась больше последней
+     */
     private List<String> getListOfArgs(String argFirst, String argSecond) throws IllegalArgumentException {
         ArrayList<String> args = new ArrayList<>();
 
@@ -83,8 +124,7 @@ public class Parser {
                 String arg = String.valueOf(column) + i;
                 args.add(arg);
             }
-        }
-        else {
+        } else {
             char firstLine = argFirst.charAt(0);
             char secondLine = argSecond.charAt(0);
             char line = argFirst.charAt(1);
@@ -96,6 +136,12 @@ public class Parser {
         return args;
     }
 
+    /**
+     * Преобразует математическое выражение в список операторов и числовых значений
+     *
+     * @param expression математическое выражение для разделения на токены
+     * @return список операторов и числовых значений математического выражения
+     */
     private List<String> parseToListToken(String expression) {
         List<String> listTokens = new ArrayList<>(expression.length());
 

@@ -4,6 +4,9 @@ import ru.sumarokov.google_table.models.Cell;
 import org.springframework.jdbc.core.RowMapper;
 import java.sql.*;
 
+/**
+* Данный класс необходим для создания объекта класса "Cell" из БД
+ */
 public class CellMapper implements RowMapper<Cell> {
 
     @Override

@@ -8,7 +8,16 @@ import java.util.regex.*;
 @Component
 public class Validator {
 
+    /**
+     * Валидация значения ячейки
+     * @param tableDAO БД с данными таблицы
+     * @param cell ячейка с данными для вычисления
+     * @throws IllegalCommandException в случая некорректного значения
+     * с описанием причины непрохождения валидации
+     */
+
     public void validate(TableDAO tableDAO, Cell cell) throws IllegalCommandException {
+        //TODO: Создать отдельный метод для общих валидаций
         validateEmptyCell(cell);
         validateReferenceToCellThatDoesNotExitsOrEmpty(tableDAO, cell);
         validateCellReferenceToItself(cell);
@@ -24,6 +33,7 @@ public class Validator {
         else validateNumber(cell);
     }
 
+    // Валидация выражения
     private void validateExpression(Cell cell) throws IllegalCommandException {
         String expression = cell.getValue();
         char[] expressionChar = expression.toCharArray();
@@ -39,6 +49,7 @@ public class Validator {
         validateCorrectLocationDot(expression);
     }
 
+    // Валидация числа
     private void validateNumber(Cell cell) throws IllegalCommandException {
         try {
             Double.parseDouble(cell.getValue());
@@ -47,6 +58,7 @@ public class Validator {
         }
     }
 
+    // Валидация формулы "SUM"
     private void validateSum(Cell cell) throws IllegalCommandException {
         validateCurrentFormulaSUM(cell);
         validateDiagonalRange(cell);
@@ -58,7 +70,7 @@ public class Validator {
         String value = cell.getValue();
         if (value == null || value.isEmpty())
             throw new IllegalCommandException("Enter the value");
-    };
+    }
 
     private void validateCellReferenceToItself(Cell cell) throws IllegalCommandException {
         Pattern pattern = Pattern.compile(cell.getId());
@@ -125,7 +137,7 @@ public class Validator {
     }
 
     private void validateDivideByZero(String expression) throws IllegalCommandException {
-        Pattern pattern = Pattern.compile("\\/0");
+        Pattern pattern = Pattern.compile("/0");
         Matcher matcher = pattern.matcher(expression);
         if (matcher.find())
             throw new IllegalCommandException("Incorrect value. Can't divide by zero");
