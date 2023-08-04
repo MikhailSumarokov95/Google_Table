@@ -341,14 +341,14 @@ public class ValidatorTest {
 
         TableDAO table = new TableDAO(new JdbcTemplate(dataSource));
         table.setValueCell("A1", "1");
-        table.setValueCell("A2", "0,12333333333333333333");
+        table.setValueCell("A2", "0.12333333333333333333");
         table.setValueCell("A3", "321");
         table.setValueCell("B1", "21333333333333333333");
         table.setValueCell("B2", "21333333333333333333");
         table.setValueCell("B3", "0");
         table.setValueCell("C1", "-1");
         table.setValueCell("C2", "-1233333333333333333333333");
-        table.setValueCell("C3", "-0,12333");
+        table.setValueCell("C3", "-0.12333");
         return table;
     }
 }

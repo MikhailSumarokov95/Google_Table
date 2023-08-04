@@ -1,6 +1,7 @@
 package ru.sumarokov.google_table.models.furmulas;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Formula {
 
@@ -18,5 +19,18 @@ public class Formula {
 
     public List<String> getArgs() {
         return args;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Formula formula = (Formula) o;
+        return type == formula.type && Objects.equals(args, formula.args);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(type, args);
     }
 }
