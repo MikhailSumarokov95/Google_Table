@@ -110,15 +110,13 @@ public class Parser {
         return new Formula(FormulaType.Sum, argsForSum);
     }
 
-    //TODO: Подправить комментарий
     /**
-     * Парсит формулу "Sum".
-     * В аргументы заносит список чисел для суммирования
+     * Создает список ссылок на ячейки расположенных в диапазоне между argFirst и argSecond
+     * включая крайние значения
      *
      * @param argFirst  первая ссылка,
      * @param argSecond последняя ссылка
-     * @return список ссылок на ячейки расположенных в диапазоне между argFirst и argSecond
-     * включая крайние значения
+     * @return список ссылок на ячейки расположенных
      * @throws IllegalArgumentException если первая ссылка оказалась больше последней
      */
     private List<String> getListOfArgs(String argFirst, String argSecond) throws IllegalArgumentException {
