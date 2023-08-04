@@ -3,7 +3,7 @@ package ru.sumarokov.google_table.models;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.sumarokov.google_table.models.dao.TableDAO;
-import ru.sumarokov.google_table.models.furmulas.*;
+import ru.sumarokov.google_table.models.formulas.*;
 
 @Component
 public class TableModel {

@@ -3,7 +3,6 @@ package ru.sumarokov.google_table.models.formulas;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import ru.sumarokov.google_table.models.*;
-import ru.sumarokov.google_table.models.furmulas.*;
 
 import java.util.*;
 

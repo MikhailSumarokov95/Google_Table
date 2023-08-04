@@ -1,4 +1,4 @@
-package ru.sumarokov.google_table.models.furmulas;
+package ru.sumarokov.google_table.models.formulas;
 
 import org.springframework.stereotype.Component;
 import ru.sumarokov.google_table.models.IllegalCommandException;

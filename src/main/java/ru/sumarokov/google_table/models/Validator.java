@@ -2,7 +2,7 @@ package ru.sumarokov.google_table.models;
 
 import org.springframework.stereotype.Component;
 import ru.sumarokov.google_table.models.dao.TableDAO;
-import ru.sumarokov.google_table.models.furmulas.FormulaPrefixes;
+import ru.sumarokov.google_table.models.formulas.FormulaPrefixes;
 import java.util.regex.*;
 
 @Component

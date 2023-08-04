@@ -3,9 +3,8 @@ package ru.sumarokov.google_table.models;
 import org.junit.jupiter.api.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
-import ru.sumarokov.google_table.models.*;
 import ru.sumarokov.google_table.models.dao.TableDAO;
-import ru.sumarokov.google_table.models.furmulas.*;
+import ru.sumarokov.google_table.models.formulas.*;
 import java.util.*;
 
 public class ParserTest {

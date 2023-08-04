@@ -1,4 +1,4 @@
-package ru.sumarokov.google_table.models.furmulas;
+package ru.sumarokov.google_table.models.formulas;
 
 public class FormulaPrefixes {
 
