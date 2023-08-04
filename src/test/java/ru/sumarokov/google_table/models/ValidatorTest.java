@@ -1,4 +1,4 @@
-package ru.sumarokov.google_table;
+package ru.sumarokov.google_table.models;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
