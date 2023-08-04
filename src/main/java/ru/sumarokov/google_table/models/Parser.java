@@ -61,9 +61,20 @@ public class Parser {
      * и поле args со списком чисел и операций
      */
     private Formula parseExpression(TableDAO tableDAO, Cell cell) {
+        String value = replacingReferencesWithValue(tableDAO, cell.getValue());
+        List<String> args = parseToListToken(value);
+        return new Formula(FormulaType.Expression, args);
+    }
+
+    /**
+     * Заменяет ссылки на числа
+     *
+     * @param tableDAO БД с данными таблицы,
+     * @param value строка ссылками для замены их на значения из ячеек таблицы из БД(tableDAO)
+     * @return строку с замененными ссылками на значения
+     */
+    private String replacingReferencesWithValue(TableDAO tableDAO, String value) {
         StringBuilder expression = new StringBuilder();
-        String value = cell.getValue();
-        //TODO: вынести в отдельный метод замену ссылок на ячейки
         for (int i = 1; i < value.length(); i++) {
             if (Character.isLetter(value.charAt(i))) {
                 String id = String.valueOf(value.charAt(i)) + value.charAt(i + 1);
@@ -72,8 +83,7 @@ public class Parser {
             } else if (i != 1 && Character.isLetter(value.charAt(i - 1))) continue;
             else expression.append(value.charAt(i));
         }
-        List<String> args = parseToListToken(expression.toString());
-        return new Formula(FormulaType.Expression, args);
+        return expression.toString();
     }
 
     /**
@@ -100,6 +110,7 @@ public class Parser {
         return new Formula(FormulaType.Sum, argsForSum);
     }
 
+    //TODO: Подправить комментарий
     /**
      * Парсит формулу "Sum".
      * В аргументы заносит список чисел для суммирования
