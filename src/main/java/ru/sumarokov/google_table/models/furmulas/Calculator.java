@@ -60,16 +60,15 @@ public class Calculator {
      * @throws IllegalCommandException в случае если во время вычисления возникло исключительная ситуация,
      *                                 например деление на ноль
      */
-    //TODO: Заменить Stack на Deque
     private String calculateExpression(List<String> tokens) throws IllegalCommandException {
-        Stack<Double> numbers = new Stack<>();
-        Stack<String> operations = new Stack<>();
+        Deque<Double> numbers = new ArrayDeque<>();
+        Deque<String> operations = new ArrayDeque<>();
 
         for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
 
-            while (!operations.empty()
-                    && !operations.peek().equals("(")
+            while (!operations.isEmpty()
+                    && !operations.getLast().equals("(")
                     && !token.equals("(")
                     && !isNumeric(token)
                     && compareOperation(operations.peek(), token) >= 0) {
@@ -77,23 +76,19 @@ public class Calculator {
             }
 
             if (token.equals(")")) {
-                while (!operations.peek().equals("(")) {
+                while (!operations.getLast().equals("(")) {
                     performAnOperation(numbers, operations);
                 }
-                operations.pop();
+                operations.removeLast();
                 continue;
             }
 
-            if (isNumeric(token)) numbers.push(Double.parseDouble(token));
-            else operations.push(token);
+            if (isNumeric(token)) numbers.addLast(Double.parseDouble(token));
+            else operations.addLast(token);
         }
 
         for (int i = 0; i < operations.size(); i++) {
-            Double secondNumber = numbers.pop();
-            Double firstNumber = numbers.pop();
-            String operator = operations.pop();
-            Double result = performAnOperation(firstNumber, secondNumber, operator);
-            numbers.push(result);
+            performAnOperation(numbers, operations);
         }
         return numbers.pop().toString();
     }
@@ -108,12 +103,15 @@ public class Calculator {
      * @throws IllegalCommandException в случае если в списке operations
      * последний элемент окажется некорректным оператором
      */
-    private void performAnOperation(Stack<Double> numbers, Stack<String> operations) throws IllegalCommandException {
-        Double secondNumber = numbers.pop();
-        Double firstNumber = numbers.pop();
-        String operator = operations.pop();
+    private void performAnOperation(Deque<Double> numbers, Deque<String> operations) throws IllegalCommandException {
+        Double secondNumber = numbers.getLast();
+        numbers.removeLast();
+        Double firstNumber = numbers.getLast();
+        numbers.removeLast();
+        String operator = operations.getLast();
+        operations.removeLast();
         Double result = performAnOperation(firstNumber, secondNumber, operator);
-        numbers.push(result);
+        numbers.addLast(result);
     }
 
     /**
