@@ -66,8 +66,6 @@ public class Calculator {
 
         for (int i = 0; i < tokens.size(); i++) {
             String token = tokens.get(i);
-            System.out.println("token: " + token);
-            System.out.println("numbers: " + numbers);
 
             while (!operations.isEmpty()
                     && !operations.getLast().equals("(")
@@ -92,7 +90,6 @@ public class Calculator {
         for (int i = 0; i < operations.size() + 1; i++)
             performAnOperation(numbers, operations);
 
-        numbers.forEach(System.out::println);
         return numbers.getLast().toString();
     }
 
