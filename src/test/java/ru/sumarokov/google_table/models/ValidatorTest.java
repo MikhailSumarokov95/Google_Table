@@ -326,6 +326,13 @@ public class ValidatorTest {
                 "Incorrect value. Cell cannot be inside a range");
     }
 
+    @Test
+    public void validateSUMWithoutColon() {
+        Cell cell = new Cell("A", "1", "SUM(B1B3)");
+        waitExceptionFromValidator(getCorrectTable(), cell,
+                "Incorrect value.Enter the correct value of the SUM formula");
+    }
+
     private void waitExceptionFromValidator(TableDAO table, Cell cell, String expectedMessage) {
         Exception thrown = Assertions.assertThrows(Exception.class, () ->
                 validator.validate(table, cell));
